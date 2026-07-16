@@ -27,7 +27,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
     type: 'chart',
     title: 'Chart',
     description: featureConfig.isProduction
-      ? 'Population by region · ?region= queries'
+      ? 'Population by region · all regions'
       : 'Population by region · 3 regions (dev)',
     defaultSettings: {
       regions: [],

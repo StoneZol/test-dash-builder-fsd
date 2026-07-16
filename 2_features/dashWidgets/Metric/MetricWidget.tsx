@@ -26,12 +26,13 @@ export const MetricWidget = ({
   } = useMetricWidget({ countryCode, onCountryChange });
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-qa="feature-metric-widget">
       <Select
         label={selectLabel}
         value={countryCode}
         options={options}
         disabled={isSelectDisabled}
+        dataQa="feature-metric-country-select"
         onChange={onCountryChange}
       />
       <Metric
@@ -40,6 +41,7 @@ export const MetricWidget = ({
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
+        dataQa="entity-metric"
       />
     </div>
   );

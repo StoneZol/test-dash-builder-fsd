@@ -8,4 +8,6 @@ export type ButtonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
   className?: string;
+  /** Maps to `data-qa` for e2e / QA selectors. */
+  dataQa?: string;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'>;

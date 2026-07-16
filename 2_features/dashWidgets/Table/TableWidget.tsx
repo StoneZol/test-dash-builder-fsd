@@ -33,7 +33,7 @@ export const TableWidget = ({
   } = useTableWidget({ countryCodes });
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-qa="feature-table-widget">
       <MultiSelect
         label={selectLabel}
         options={options}
@@ -41,6 +41,7 @@ export const TableWidget = ({
         searchable
         searchPlaceholder="Filter countries…"
         disabled={isSelectDisabled}
+        dataQa="feature-table-country-multiselect"
         onChange={onCountryCodesChange}
       />
       <Table
@@ -50,6 +51,7 @@ export const TableWidget = ({
         error={error}
         emptyMessage="Select at least one country to show the table"
         onRefresh={onRefresh}
+        dataQa="entity-table"
       />
     </div>
   );

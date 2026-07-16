@@ -18,6 +18,7 @@ const Logo = ({
       href={href}
       className={[styles.logo, className].filter(Boolean).join(' ')}
       aria-label={displayTitle}
+      data-qa="logo"
     >
       <span className={styles.mark} aria-hidden>
         CD

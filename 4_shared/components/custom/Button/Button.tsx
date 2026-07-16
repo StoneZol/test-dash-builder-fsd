@@ -14,6 +14,7 @@ const Button = ({
   variant = 'secondary',
   size = 'md',
   className,
+  dataQa,
   type = 'button',
   ...rest
 }: ButtonProps) => {
@@ -21,6 +22,7 @@ const Button = ({
     <button
       type={type}
       className={cn(styles.button, styles[variant], styles[size], className)}
+      data-qa={dataQa}
       {...rest}
     >
       {children}

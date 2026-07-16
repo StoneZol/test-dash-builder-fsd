@@ -59,8 +59,8 @@ export const useChartWidget = ({ regions }: UseChartWidgetArgs) => {
         ? ((catalogQuery.error ?? regionError) as Error).message
         : null,
     selectLabel: featureConfig.isProduction
-      ? 'Regions (prod · ?region= queries)'
-      : 'Regions (dev · top 3 · ?region=)',
+      ? 'Regions (prod · all)'
+      : 'Regions (dev · top 3)',
     isSelectDisabled: catalogQuery.isLoading || options.length === 0,
     onRefresh: () => {
       if (regions.length === 0) {

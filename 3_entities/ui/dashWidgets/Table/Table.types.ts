@@ -10,4 +10,5 @@ export type TableProps = {
   error?: string | null;
   emptyMessage?: string;
   onRefresh?: () => void;
+  dataQa?: string;
 };

@@ -26,7 +26,7 @@ export const ChartWidget = ({
   } = useChartWidget({ regions });
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-qa="feature-chart-widget">
       <MultiSelect
         label={selectLabel}
         options={options}
@@ -34,6 +34,7 @@ export const ChartWidget = ({
         searchable
         searchPlaceholder="Filter regions…"
         disabled={isSelectDisabled}
+        dataQa="feature-chart-region-multiselect"
         onChange={onRegionsChange}
       />
       <Chart
@@ -42,6 +43,7 @@ export const ChartWidget = ({
         error={error}
         emptyMessage="Select at least one region to show the chart"
         onRefresh={onRefresh}
+        dataQa="entity-chart"
       />
     </div>
   );

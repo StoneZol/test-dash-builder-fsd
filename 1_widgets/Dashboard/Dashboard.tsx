@@ -136,15 +136,15 @@ const Dashboard = ({}: DashboardProps) => {
 
     if (!hydrated) {
         return (
-            <section className={styles.root}>
+            <section className={styles.root} data-qa="dashboard-hydrating">
                 <p className={styles.hint}>Restoring dashboard…</p>
             </section>
         );
     }
 
     return (
-        <section className={styles.root}>
-            <header className={styles.toolbar}>
+        <section className={styles.root} data-qa="dashboard">
+            <header className={styles.toolbar} data-qa="dashboard-toolbar">
                 <div>
                     <h1 className={styles.heading}>Dashboard Builder</h1>
                     <p className={styles.hint}>
@@ -156,6 +156,7 @@ const Dashboard = ({}: DashboardProps) => {
                     type="button"
                     variant="secondary"
                     size="md"
+                    dataQa="dashboard-invalidate-cache"
                     onClick={() => {
                         void queryClient.invalidateQueries({
                             queryKey: countryKeys.all,
@@ -166,12 +167,13 @@ const Dashboard = ({}: DashboardProps) => {
                 </Button>
             </header>
 
-            <div className={styles.catalog}>
+            <div className={styles.catalog} data-qa="dashboard-catalog">
                 {WIDGET_CATALOG.map((item) => (
                     <button
                         key={item.type}
                         type="button"
                         className={styles.catalogItem}
+                        data-qa={`dashboard-catalog-item-${item.type}`}
                         onClick={() => addWidget(item.type)}
                     >
                         <span className={styles.catalogBadge}>{item.type}</span>
@@ -187,9 +189,10 @@ const Dashboard = ({}: DashboardProps) => {
             <div
                 ref={containerRef as RefObject<HTMLDivElement>}
                 className={styles.gridWrap}
+                data-qa="dashboard-grid-wrap"
             >
                 {widgets.length === 0 ? (
-                    <p className={styles.empty}>
+                    <p className={styles.empty} data-qa="dashboard-empty">
                         No widgets yet. Pick one from the catalog above.
                     </p>
                 ) : mounted ? (
@@ -211,12 +214,21 @@ const Dashboard = ({}: DashboardProps) => {
                         onLayoutChange={handleLayoutChange}
                     >
                         {widgets.map((widget) => (
-                            <div key={widget.id} className={styles.item}>
-                                <div className={styles.itemChrome}>
+                            <div
+                                key={widget.id}
+                                className={styles.item}
+                                data-qa={`dashboard-widget-${widget.type}`}
+                                data-widget-id={widget.id}
+                            >
+                                <div
+                                    className={styles.itemChrome}
+                                    data-qa="dashboard-widget-chrome"
+                                >
                                     <button
                                         type="button"
                                         className={styles.dragHandle}
                                         aria-label="Drag widget"
+                                        data-qa="dashboard-widget-drag"
                                     >
                                         ⋮⋮
                                     </button>
@@ -227,12 +239,16 @@ const Dashboard = ({}: DashboardProps) => {
                                         type="button"
                                         variant="danger"
                                         size="sm"
+                                        dataQa="dashboard-widget-remove"
                                         onClick={() => removeWidget(widget.id)}
                                     >
                                         Remove
                                     </Button>
                                 </div>
-                                <div className={styles.itemBody}>
+                                <div
+                                    className={styles.itemBody}
+                                    data-qa="dashboard-widget-body"
+                                >
                                     {renderWidget({
                                         widget,
                                         onUpdateSettings: updateWidgetSettings,
@@ -242,7 +258,9 @@ const Dashboard = ({}: DashboardProps) => {
                         ))}
                     </GridLayout>
                 ) : (
-                    <p className={styles.hint}>Preparing grid…</p>
+                    <p className={styles.hint} data-qa="dashboard-grid-preparing">
+                        Preparing grid…
+                    </p>
                 )}
             </div>
         </section>

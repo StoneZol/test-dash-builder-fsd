@@ -15,6 +15,7 @@ const MultiSelect = ({
   searchable = true,
   searchPlaceholder = 'Search…',
   className,
+  dataQa,
   onChange,
 }: MultiSelectProps) => {
   const [open, setOpen] = useState(false);
@@ -98,7 +99,7 @@ const MultiSelect = ({
   };
 
   return (
-    <div className={cn(styles.root, className)} ref={rootRef}>
+    <div className={cn(styles.root, className)} ref={rootRef} data-qa={dataQa}>
       {label ? <span className={styles.label}>{label}</span> : null}
 
       <button
@@ -108,6 +109,7 @@ const MultiSelect = ({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={listId}
+        data-qa={dataQa ? `${dataQa}-trigger` : undefined}
         onClick={() => {
           if (disabled) return;
           setOpen((prev) => !prev);
@@ -126,7 +128,12 @@ const MultiSelect = ({
       </button>
 
       {open ? (
-        <div className={styles.dropdown} id={listId} role="listbox">
+        <div
+          className={styles.dropdown}
+          id={listId}
+          role="listbox"
+          data-qa={dataQa ? `${dataQa}-dropdown` : undefined}
+        >
           {searchable ? (
             <input
               className={styles.search}
@@ -134,6 +141,7 @@ const MultiSelect = ({
               value={search}
               placeholder={searchPlaceholder}
               autoFocus
+              data-qa={dataQa ? `${dataQa}-search` : undefined}
               onChange={(event) => setSearch(event.target.value)}
               onClick={(event) => event.stopPropagation()}
             />
@@ -153,6 +161,9 @@ const MultiSelect = ({
                     role="option"
                     aria-selected={active}
                     className={cn(styles.option, active && styles.optionActive)}
+                    data-qa={
+                      dataQa ? `${dataQa}-option-${option.value}` : undefined
+                    }
                     onClick={() => toggle(option.value)}
                   >
                     <input

@@ -26,12 +26,13 @@ export const NewsCardWidget = ({
   } = useNewsCardWidget({ countryCode, onCountryChange });
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-qa="feature-news-widget">
       <Select
         label={selectLabel}
         value={countryCode}
         options={options}
         disabled={isSelectDisabled}
+        dataQa="feature-news-country-select"
         onChange={onCountryChange}
       />
       <NewsCard
@@ -43,6 +44,7 @@ export const NewsCardWidget = ({
         isLoading={isLoading}
         error={error}
         onRefresh={onRefresh}
+        dataQa="entity-news-card"
       />
     </div>
   );

@@ -6,10 +6,10 @@
 
 ## Демо
 
-| Окружение   | Ссылка |
-|-------------|--------|
-| Development | _TODO: ссылка на deploy_ |
-| Production  | _TODO: ссылка на deploy_ |
+| Окружение   | Ссылка                                        |
+| ----------- | --------------------------------------------- |
+| Development | https://test-dash-builder-fsd-dev.vercel.app/ |
+| Production  | https://test-dash-builder-fsd.vercel.app/     |
 
 ## Стек
 
@@ -31,12 +31,12 @@
 
 ### Виджеты
 
-| Виджет | Назначение |
-|--------|------------|
-| **Table** | Таблица стран (мультивыбор) |
+| Виджет         | Назначение                            |
+| -------------- | ------------------------------------- |
+| **Table**      | Таблица стран (мультивыбор)           |
 | **Statistics** | Метрика населения по выбранной стране |
-| **Chart** | Население по регионам |
-| **News card** | Краткая карточка-брифинг по стране |
+| **Chart**      | Население по регионам                 |
+| **News card**  | Краткая карточка-брифинг по стране    |
 
 Источник данных общий: топ-100 стран по населению. Наборы опций в селектах зависят от окружения (см. ниже).
 
@@ -62,11 +62,11 @@ app/                  # Next.js App Router (страницы, layout, API routes
 1. **Zustand только для дашборда**  
    Layout, список виджетов и их settings. Кеш API — в React Query, без дублирования.
 
-2. **React Query для стран — разные keys под разные ресурсы**  
-   - **Catalog** (`/api/countries/catalog`) — лёгкий список name + alpha-3 + region для селектов  
-   - **Detail** (`/codes.alpha_3/{code}`) — Metric / News / строки Table  
-   - **By region** (`?region=`) — Chart  
-   Один и тот же key шарится; смена страны/региона = отдельный запрос (повтор — из кеша).
+2. **React Query для стран — разные keys под разные ресурсы**
+    - **Catalog** (`/api/countries/catalog`) — лёгкий список name + alpha-3 + region для селектов
+    - **Detail** (`/codes.alpha_3/{code}`) — Metric / News / строки Table
+    - **By region** (`?region=`) — Chart  
+      Один и тот же key шарится; смена страны/региона = отдельный запрос (повтор — из кеша).
 
 3. **Прокси `/api/countries`**  
    `API_KEY` и upstream URL — только на сервере (`serverEnvConfig`). Клиент ходит на `NEXT_PUBLIC_APP_API_BASE_URL`.
@@ -80,16 +80,19 @@ app/                  # Next.js App Router (страницы, layout, API routes
 6. **Размещение виджетов**  
    При добавлении ищется первая свободная ячейка (слева направо, сверху вниз), а не всегда новая строка.
 
+7. **`data-qa` на ключевых UI-элементах**  
+   Каталог, виджеты, селекты, Refresh/Remove — стабильные селекторы для e2e / QA без привязки к классам и тексту.
+
 ## Окружения
 
 Не только разные названия — разное поведение через env и `featureConfig` (feature flags).
 
-| | Development | Production |
-|---|-------------|------------|
-| `NEXT_PUBLIC_APP_ENV` | `development` | `production` |
-| Metric / News (селект) | top 5 catalog | полный catalog |
-| Table (мультивыбор) | top 5 + detail queries | полный catalog + detail |
-| Chart (регионы) | 3 + `?region=` | все регионы + `?region=` |
+|                          | Development                               | Production                   |
+| ------------------------ | ----------------------------------------- | ---------------------------- |
+| `NEXT_PUBLIC_APP_ENV`    | `development`                             | `production`                 |
+| Metric / News (селект)   | top 5 catalog                             | полный catalog               |
+| Table (мультивыбор)      | top 5 + detail queries                    | полный catalog + detail      |
+| Chart (регионы)          | 3                                         | все из catalog               |
 | Debug panel / метка в UI | по флагу `NEXT_PUBLIC_ENABLE_DEBUG_PANEL` | обычно выключен / Production |
 
 Секретный ключ: `API_KEY` (без `NEXT_PUBLIC_`). Upstream: `REST_COUNTRIES_API_BASE_URL`.

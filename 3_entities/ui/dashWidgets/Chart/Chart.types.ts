@@ -9,4 +9,5 @@ export type ChartProps = {
   error?: string | null;
   emptyMessage?: string;
   onRefresh?: () => void;
+  dataQa?: string;
 };

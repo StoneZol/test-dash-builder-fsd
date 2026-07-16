@@ -9,15 +9,17 @@ const Metric = ({
   isLoading = false,
   error = null,
   onRefresh,
+  dataQa = 'metric',
 }: MetricProps) => {
   return (
-    <article className={styles.root}>
+    <article className={styles.root} data-qa={dataQa}>
       {onRefresh ? (
         <div className={styles.toolbar}>
           <Button
             type="button"
             variant="ghost"
             size="sm"
+            dataQa={`${dataQa}-refresh`}
             onClick={onRefresh}
             disabled={isLoading}
           >
@@ -26,13 +28,25 @@ const Metric = ({
         </div>
       ) : null}
 
-      {isLoading ? <p className={styles.state}>Loading…</p> : null}
-      {error ? <p className={styles.error}>{error}</p> : null}
+      {isLoading ? (
+        <p className={styles.state} data-qa={`${dataQa}-loading`}>
+          Loading…
+        </p>
+      ) : null}
+      {error ? (
+        <p className={styles.error} data-qa={`${dataQa}-error`}>
+          {error}
+        </p>
+      ) : null}
       {!isLoading && !error ? (
         <>
-          <p className={styles.value}>{value}</p>
+          <p className={styles.value} data-qa={`${dataQa}-value`}>
+            {value}
+          </p>
           {description ? (
-            <p className={styles.description}>{description}</p>
+            <p className={styles.description} data-qa={`${dataQa}-description`}>
+              {description}
+            </p>
           ) : null}
         </>
       ) : null}
