@@ -1,0 +1,19 @@
+@use '@styles/mixins' as mixins;
+@use '@styles/functions' as functions;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: functions.rem(10);
+  height: 100%;
+  min-height: 0;
+  padding: functions.rem(12);
+  overflow: auto;
+
+  > :last-child {
+    flex: 1;
+    min-height: 0;
+    border: none;
+    padding: 0;
+  }
+}

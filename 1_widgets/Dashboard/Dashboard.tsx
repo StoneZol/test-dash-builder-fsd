@@ -33,22 +33,50 @@ const COLS = 12;
 const getWidgetTitle = (widget: WidgetInstance) =>
     getCatalogItem(widget.type)?.title ?? widget.type;
 
-const renderWidget = (widget: WidgetInstance) => {
+type RenderWidgetArgs = {
+    widget: WidgetInstance;
+    onUpdateSettings: (
+        id: string,
+        settings: Partial<WidgetInstance['settings']>,
+    ) => void;
+};
+
+const renderWidget = ({ widget, onUpdateSettings }: RenderWidgetArgs) => {
     switch (widget.type) {
         case 'table':
-            return <TableWidget />;
+            return (
+                <TableWidget
+                    countryNames={widget.settings.countryNames ?? []}
+                    onCountryNamesChange={(countryNames) =>
+                        onUpdateSettings(widget.id, { countryNames })
+                    }
+                />
+            );
         case 'metric':
             return (
                 <MetricWidget
-                    countryName={widget.settings.countryName ?? 'germany'}
+                    countryName={widget.settings.countryName}
+                    onCountryChange={(countryName) =>
+                        onUpdateSettings(widget.id, { countryName })
+                    }
                 />
             );
         case 'chart':
-            return <ChartWidget />;
+            return (
+                <ChartWidget
+                    regions={widget.settings.regions ?? []}
+                    onRegionsChange={(regions) =>
+                        onUpdateSettings(widget.id, { regions })
+                    }
+                />
+            );
         case 'news':
             return (
                 <NewsCardWidget
-                    countryName={widget.settings.countryName ?? 'japan'}
+                    countryName={widget.settings.countryName}
+                    onCountryChange={(countryName) =>
+                        onUpdateSettings(widget.id, { countryName })
+                    }
                 />
             );
         default:
@@ -68,6 +96,9 @@ const Dashboard = ({}: DashboardProps) => {
     const addWidget = useDashboardStore((state) => state.addWidget);
     const removeWidget = useDashboardStore((state) => state.removeWidget);
     const setLayout = useDashboardStore((state) => state.setLayout);
+    const updateWidgetSettings = useDashboardStore(
+        (state) => state.updateWidgetSettings,
+    );
 
     useEffect(() => {
         const result = useDashboardStore.persist.rehydrate();
@@ -192,7 +223,10 @@ const Dashboard = ({}: DashboardProps) => {
                                     </button>
                                 </div>
                                 <div className={styles.itemBody}>
-                                    {renderWidget(widget)}
+                                    {renderWidget({
+                                        widget,
+                                        onUpdateSettings: updateWidgetSettings,
+                                    })}
                                 </div>
                             </div>
                         ))}

@@ -1,9 +1,10 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { countryKeys, getCountries } from '@/3_entities/api/country';
+import { MultiSelect } from '@/4_shared/components/custom';
 import { Table } from '@/3_entities/ui/dashWidgets';
+
+import styles from './TableWidget.module.scss';
+import { useTableWidget } from './TableWidget.hooks';
 
 const COLUMNS = [
   { key: 'name', title: 'Country' },
@@ -12,35 +13,44 @@ const COLUMNS = [
   { key: 'population', title: 'Population' },
 ];
 
-export const TableWidget = () => {
-  const queryClient = useQueryClient();
-  const query = useQuery({
-    queryKey: countryKeys.table(),
-    queryFn: getCountries,
-    select: (countries) =>
-      [...countries]
-        .sort((a, b) => b.population - a.population)
-        .slice(0, 20)
-        .map((country) => ({
-          cca3: country.cca3,
-          name: country.name.common,
-          region: country.region,
-          capital: country.capital[0] ?? '—',
-          population: country.population.toLocaleString('en-US'),
-        })),
-  });
+type TableWidgetProps = {
+  countryNames: string[];
+  onCountryNamesChange: (countryNames: string[]) => void;
+};
+
+export const TableWidget = ({
+  countryNames,
+  onCountryNamesChange,
+}: TableWidgetProps) => {
+  const {
+    options,
+    rows,
+    isLoading,
+    error,
+    selectLabel,
+    isSelectDisabled,
+    onRefresh,
+  } = useTableWidget({ countryNames });
 
   return (
-    <Table
-      columns={COLUMNS}
-      rows={query.data ?? []}
-      isLoading={query.isLoading || query.isFetching}
-      error={query.error ? (query.error as Error).message : null}
-      onRefresh={() => {
-        void queryClient.invalidateQueries({
-          queryKey: countryKeys.table(),
-        });
-      }}
-    />
+    <div className={styles.root}>
+      <MultiSelect
+        label={selectLabel}
+        options={options}
+        value={countryNames}
+        searchable
+        searchPlaceholder="Filter countries…"
+        disabled={isSelectDisabled}
+        onChange={onCountryNamesChange}
+      />
+      <Table
+        columns={COLUMNS}
+        rows={rows}
+        isLoading={isLoading}
+        error={error}
+        emptyMessage="Select at least one country to show the table"
+        onRefresh={onRefresh}
+      />
+    </div>
   );
 };

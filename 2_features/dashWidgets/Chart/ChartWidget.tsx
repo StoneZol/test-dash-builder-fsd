@@ -1,40 +1,48 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { countryKeys, getCountries } from '@/3_entities/api/country';
 import { Chart } from '@/3_entities/ui/dashWidgets';
+import { MultiSelect } from '@/4_shared/components/custom';
 
-export const ChartWidget = () => {
-  const queryClient = useQueryClient();
-  const query = useQuery({
-    queryKey: countryKeys.chart(),
-    queryFn: getCountries,
-    select: (countries) => {
-      const byRegion = countries.reduce<Record<string, number>>(
-        (acc, country) => {
-          acc[country.region] = (acc[country.region] ?? 0) + country.population;
-          return acc;
-        },
-        {},
-      );
+import styles from './ChartWidget.module.scss';
+import { useChartWidget } from './ChartWidget.hooks';
 
-      return Object.entries(byRegion)
-        .map(([label, value]) => ({ label, value }))
-        .sort((a, b) => b.value - a.value);
-    },
-  });
+type ChartWidgetProps = {
+  regions: string[];
+  onRegionsChange: (regions: string[]) => void;
+};
+
+export const ChartWidget = ({
+  regions,
+  onRegionsChange,
+}: ChartWidgetProps) => {
+  const {
+    options,
+    bars,
+    isLoading,
+    error,
+    selectLabel,
+    isSelectDisabled,
+    onRefresh,
+  } = useChartWidget({ regions });
 
   return (
-    <Chart
-      bars={query.data ?? []}
-      isLoading={query.isLoading || query.isFetching}
-      error={query.error ? (query.error as Error).message : null}
-      onRefresh={() => {
-        void queryClient.invalidateQueries({
-          queryKey: countryKeys.chart(),
-        });
-      }}
-    />
+    <div className={styles.root}>
+      <MultiSelect
+        label={selectLabel}
+        options={options}
+        value={regions}
+        searchable
+        searchPlaceholder="Filter regions…"
+        disabled={isSelectDisabled}
+        onChange={onRegionsChange}
+      />
+      <Chart
+        bars={bars}
+        isLoading={isLoading}
+        error={error}
+        emptyMessage="Select at least one region to show the chart"
+        onRefresh={onRefresh}
+      />
+    </div>
   );
 };

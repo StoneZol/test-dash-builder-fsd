@@ -1,39 +1,46 @@
 'use client';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { countryKeys, getCountryByName } from '@/3_entities/api/country';
 import { Metric } from '@/3_entities/ui/dashWidgets';
+import { Select } from '@/4_shared/components/custom';
+
+import styles from './MetricWidget.module.scss';
+import { useMetricWidget } from './MetricWidget.hooks';
 
 type MetricWidgetProps = {
-    countryName: string;
+  countryName?: string;
+  onCountryChange: (countryName: string) => void;
 };
 
-export const MetricWidget = ({ countryName }: MetricWidgetProps) => {
-    const queryClient = useQueryClient();
-    const query = useQuery({
-        queryKey: countryKeys.byName(countryName),
-        queryFn: () => getCountryByName(countryName),
-        enabled: Boolean(countryName),
-    });
+export const MetricWidget = ({
+  countryName = '',
+  onCountryChange,
+}: MetricWidgetProps) => {
+  const {
+    options,
+    metric,
+    isLoading,
+    error,
+    selectLabel,
+    isSelectDisabled,
+    onRefresh,
+  } = useMetricWidget({ countryName, onCountryChange });
 
-    const country = query.data;
-
-    return (
-        <Metric
-            value={country ? country.population.toLocaleString('en-US') : '—'}
-            description={
-                country
-                    ? `${country.name.common} · ${country.region}`
-                    : `Country: ${countryName}`
-            }
-            isLoading={query.isLoading || query.isFetching}
-            error={query.error ? (query.error as Error).message : null}
-            onRefresh={() => {
-                void queryClient.invalidateQueries({
-                    queryKey: countryKeys.byName(countryName),
-                });
-            }}
-        />
-    );
+  return (
+    <div className={styles.root}>
+      <Select
+        label={selectLabel}
+        value={countryName}
+        options={options}
+        disabled={isSelectDisabled}
+        onChange={onCountryChange}
+      />
+      <Metric
+        value={metric?.value ?? '—'}
+        description={metric?.description ?? 'Select a country'}
+        isLoading={isLoading}
+        error={error}
+        onRefresh={onRefresh}
+      />
+    </div>
+  );
 };

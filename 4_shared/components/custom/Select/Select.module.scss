@@ -1,0 +1,37 @@
+@use '@styles/mixins' as mixins;
+@use '@styles/functions' as functions;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: functions.rem(4);
+  min-width: 0;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: var(--font-semibold);
+  color: var(--text-description);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.control {
+  width: 100%;
+  padding: functions.rem(6) functions.rem(10);
+  border: 1px solid var(--border-color);
+  background: var(--bg-default);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  @include mixins.transition(border-color);
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-accent);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+}

@@ -31,6 +31,12 @@ export const countryV5Schema = z.object({
 export const countriesV5ResponseSchema = z.object({
   data: z.object({
     objects: z.array(countryV5Schema),
+    meta: z
+      .object({
+        more: z.boolean().optional(),
+        total: z.number().optional(),
+      })
+      .optional(),
   }),
 });
 

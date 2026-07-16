@@ -23,8 +23,22 @@
   @include mixins.py(16);
 }
 
+.metaBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: functions.rem(2);
+}
+
 .meta {
   @include mixins.font-size(13);
   color: var(--text-description);
+  white-space: nowrap;
+}
+
+.debug {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-accent);
   white-space: nowrap;
 }
