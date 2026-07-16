@@ -1,9 +1,10 @@
+export { DASHBOARD_COLS } from './dashboard.placement';
 export { useDashboardStore } from './dashboard.store';
 export type {
-    DashboardLayoutItem,
-    WidgetCatalogItem,
-    WidgetInstance,
-    WidgetSettings,
-    WidgetType,
+  DashboardLayoutItem,
+  WidgetCatalogItem,
+  WidgetInstance,
+  WidgetSettings,
+  WidgetType,
 } from './dashboard.types';
 export { getCatalogItem, WIDGET_CATALOG } from './widgetCatalog';

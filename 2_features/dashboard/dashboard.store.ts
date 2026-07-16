@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { findNextLayoutPosition } from './dashboard.placement';
 import { getCatalogItem } from './widgetCatalog';
 import type {
   DashboardLayoutItem,
@@ -31,9 +32,6 @@ const createId = () => {
   return `widget-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const nextY = (layout: DashboardLayoutItem[]) =>
-  layout.reduce((max, item) => Math.max(max, item.y + item.h), 0);
-
 export const useDashboardStore = create<DashboardState>()(
   persist(
     (set, get) => ({
@@ -48,6 +46,10 @@ export const useDashboardStore = create<DashboardState>()(
 
         const id = createId();
         const { layout, widgets } = get();
+        const position = findNextLayoutPosition(
+          layout,
+          catalogItem.defaultSize,
+        );
 
         set({
           widgets: [
@@ -62,8 +64,7 @@ export const useDashboardStore = create<DashboardState>()(
             ...layout,
             {
               i: id,
-              x: 0,
-              y: nextY(layout),
+              ...position,
               ...catalogItem.defaultSize,
             },
           ],

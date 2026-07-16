@@ -18,6 +18,7 @@ import {
     TableWidget,
 } from '@/2_features/dashWidgets';
 import {
+    DASHBOARD_COLS,
     getCatalogItem,
     useDashboardStore,
     WIDGET_CATALOG,
@@ -28,7 +29,7 @@ import { countryKeys } from '@/3_entities/api/country';
 import styles from './Dashboard.module.scss';
 import type { DashboardProps } from './Dashboard.types';
 
-const COLS = 12;
+const COLS = DASHBOARD_COLS;
 
 const getWidgetTitle = (widget: WidgetInstance) =>
     getCatalogItem(widget.type)?.title ?? widget.type;
