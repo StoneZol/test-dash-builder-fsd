@@ -1,2 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type ChartProps = {}
+export type ChartBar = {
+    label: string;
+    value: number;
+};
+
+export type ChartProps = {
+    bars: ChartBar[];
+    isLoading?: boolean;
+    error?: string | null;
+    onRefresh?: () => void;
+};

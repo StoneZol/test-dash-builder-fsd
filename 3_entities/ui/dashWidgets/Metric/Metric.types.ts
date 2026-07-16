@@ -1,2 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type MetricProps = {}
+export type MetricProps = {
+    value: string;
+    description?: string;
+    isLoading?: boolean;
+    error?: string | null;
+    onRefresh?: () => void;
+};

@@ -1,1 +1,153 @@
 @use '@styles/mixins' as mixins;
+
+.root {
+    width: 100%;
+    padding: var(--global-py) var(--global-px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.heading {
+    margin: 0 0 6px;
+    font-size: 28px;
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+.hint {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-description);
+}
+
+.secondaryButton {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    font-size: 13px;
+    color: var(--text-primary);
+    cursor: pointer;
+    @include mixins.transition(background-color);
+
+    &:hover {
+        background: #11111108;
+    }
+}
+
+.catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.catalogItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    cursor: pointer;
+    background: var(--bg-default);
+    @include mixins.transition((border-color, background-color));
+
+    &:hover {
+        border-color: var(--color-accent);
+        background: #2f80ed0a;
+    }
+}
+
+.catalogTitle {
+    font-size: 14px;
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+}
+
+.catalogDescription {
+    font-size: 12px;
+    color: var(--text-description);
+}
+
+.empty {
+    margin: 24px 0;
+    font-size: 14px;
+    color: var(--text-description);
+}
+
+.gridWrap {
+    position: relative;
+    width: 100%;
+    min-height: 200px;
+}
+
+.grid {
+    width: 100%;
+    min-height: 200px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background: var(--bg-default);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.itemChrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-color);
+    background: #11111106;
+}
+
+.dragHandle {
+    flex-shrink: 0;
+    font-size: 14px;
+    letter-spacing: -2px;
+    color: var(--text-description);
+    cursor: grab;
+    padding: 2px 4px;
+}
+
+.itemTitle {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.remove {
+    flex-shrink: 0;
+    margin-left: auto;
+    font-size: 12px;
+    color: #c0392b;
+    cursor: pointer;
+}
+
+.itemBody {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+
+    > * {
+        height: 100%;
+        border: none;
+    }
+}

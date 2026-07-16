@@ -1,0 +1,1 @@
+export { NewsCardWidget } from './NewsCardWidget';

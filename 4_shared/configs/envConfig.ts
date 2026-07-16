@@ -1,19 +1,8 @@
-const getRequiredEnv = (key: string, value: string | undefined): string => {
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${key}`);
-  }
-
-  return value;
-};
-
+/** Safe for client + server. Never put secrets here. */
 export const envConfig = {
   appEnv: process.env.NEXT_PUBLIC_APP_ENV ?? 'development',
-  apiBaseUrl: getRequiredEnv(
-    'NEXT_PUBLIC_API_BASE_URL',
-    process.env.NEXT_PUBLIC_API_BASE_URL,
-  ),
+  appApiBaseUrl: process.env.NEXT_PUBLIC_APP_API_BASE_URL ?? '/api',
   enableDebugPanel: process.env.NEXT_PUBLIC_ENABLE_DEBUG_PANEL === 'true',
-  apiKey: process.env.API_KEY ?? '',
   isDevelopment: process.env.NEXT_PUBLIC_APP_ENV === 'development',
   isProduction: process.env.NEXT_PUBLIC_APP_ENV === 'production',
 } as const;

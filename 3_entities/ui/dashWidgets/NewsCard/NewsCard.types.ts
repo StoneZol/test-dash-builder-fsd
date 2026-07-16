@@ -1,2 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type NewsCardProps = {}
+export type NewsCardProps = {
+    title: string;
+    subtitle?: string;
+    body: string;
+    imageUrl?: string;
+    imageAlt?: string;
+    isLoading?: boolean;
+    error?: string | null;
+    onRefresh?: () => void;
+};

@@ -1,8 +1,9 @@
+import { QueryProvider } from '@/4_shared/providers';
+import { Footer } from '@/1_widgets/Footer';
+import { Header } from '@/1_widgets/Header';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import { Footer } from '@/1_widgets/Footer';
-import { Header } from '@/1_widgets/Header';
 import '@styles/_global.scss';
 
 const inter = Inter({
@@ -23,11 +24,13 @@ export default function RootLayout({
     return (
         <html lang="ru" className={inter.variable}>
             <body>
-                <div className="root">
-                    <Header />
-                    <main>{children}</main>
-                    <Footer />
-                </div>
+                <QueryProvider>
+                    <div className="root">
+                        <Header />
+                        <main>{children}</main>
+                        <Footer />
+                    </div>
+                </QueryProvider>
             </body>
         </html>
     );

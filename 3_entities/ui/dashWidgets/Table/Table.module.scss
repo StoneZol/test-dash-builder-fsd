@@ -1,1 +1,65 @@
 @use '@styles/mixins' as mixins;
+
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-default);
+    overflow: hidden;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.refresh {
+    font-size: 12px;
+    color: var(--text-accent);
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+}
+
+.scroll {
+    flex: 1;
+    overflow: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    th,
+    td {
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        white-space: nowrap;
+    }
+
+    th {
+        font-weight: var(--font-semibold);
+        color: var(--text-description);
+        position: sticky;
+        top: 0;
+        background: var(--bg-default);
+    }
+}
+
+.state,
+.error {
+    margin: 0;
+    font-size: 13px;
+}
+
+.error {
+    color: #c0392b;
+}

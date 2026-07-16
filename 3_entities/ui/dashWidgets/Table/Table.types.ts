@@ -1,2 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type TableProps = {}
+export type TableColumn = {
+    key: string;
+    title: string;
+};
+
+export type TableProps = {
+    columns: TableColumn[];
+    rows: Array<Record<string, string | number>>;
+    isLoading?: boolean;
+    error?: string | null;
+    onRefresh?: () => void;
+};
