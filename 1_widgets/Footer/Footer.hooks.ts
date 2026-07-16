@@ -1,8 +1,8 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { FooterProps } from './Footer.types';
+/**
+ * Footer year for copyright line.
+ */
+export const useFooter = () => {
+    const year = new Date().getFullYear();
 
-const useFooterHook = () => {
-   
-}
-
-export default useFooterHook
+    return { year };
+};

@@ -1,8 +1,22 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { HeaderProps } from './Header.types';
+import { envConfig, featureConfig } from '@/4_shared/configs';
 
-const useHeaderHook = () => {
-   
-}
+const formatLimit = (limit: number | null) =>
+    limit == null ? 'all' : String(limit);
 
-export default useHeaderHook
+/**
+ * Header meta: env label + optional debug strip from feature flags.
+ */
+export const useHeader = () => {
+    const showProduction = envConfig.isProduction;
+    const showDebugPanel = envConfig.enableDebugPanel;
+
+    const debugText = showDebugPanel
+        ? `debug · light catalog top 100 · spotlight ${formatLimit(featureConfig.spotlightCountriesLimit)} · table ${formatLimit(featureConfig.tableCountriesLimit)} · regions ${formatLimit(featureConfig.chartRegionsLimit)}`
+        : null;
+
+    return {
+        showProduction,
+        showDebugPanel,
+        debugText,
+    };
+};

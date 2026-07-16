@@ -1,12 +1,9 @@
 'use client';
 
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState, type RefObject } from 'react';
+import type { RefObject } from 'react';
 import {
     GridLayout,
-    useContainerWidth,
     verticalCompactor,
-    type Layout,
 } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -17,26 +14,16 @@ import {
     NewsCardWidget,
     TableWidget,
 } from '@/2_features/dashWidgets';
-import {
-    DASHBOARD_COLS,
-    getCatalogItem,
-    useDashboardStore,
-    WIDGET_CATALOG,
-    type WidgetInstance,
-} from '@/2_features/dashboard';
-import {
-    countryKeys,
-    useCountriesCatalogQuery,
-} from '@/3_entities/api/country';
+import type { WidgetInstance } from '@/2_features/dashboard';
 import { Button } from '@/4_shared/components/custom';
 
+import {
+    DASHBOARD_GRID_COLS,
+    getWidgetTitle,
+    useDashboard,
+} from './Dashboard.hooks';
 import styles from './Dashboard.module.scss';
 import type { DashboardProps } from './Dashboard.types';
-
-const COLS = DASHBOARD_COLS;
-
-const getWidgetTitle = (widget: WidgetInstance) =>
-    getCatalogItem(widget.type)?.title ?? widget.type;
 
 type RenderWidgetArgs = {
     widget: WidgetInstance;
@@ -89,50 +76,21 @@ const renderWidget = ({ widget, onUpdateSettings }: RenderWidgetArgs) => {
     }
 };
 
-const Dashboard = ({}: DashboardProps) => {
-    const queryClient = useQueryClient();
-    const { width, containerRef, mounted, measureWidth } = useContainerWidth({
-        measureBeforeMount: true,
-    });
-    const [hydrated, setHydrated] = useState(false);
-
-    const widgets = useDashboardStore((state) => state.widgets);
-    // Shared light catalog only when widgets exist
-    useCountriesCatalogQuery({ enabled: widgets.length > 0 });
-    const layout = useDashboardStore((state) => state.layout);
-    const addWidget = useDashboardStore((state) => state.addWidget);
-    const removeWidget = useDashboardStore((state) => state.removeWidget);
-    const setLayout = useDashboardStore((state) => state.setLayout);
-    const updateWidgetSettings = useDashboardStore(
-        (state) => state.updateWidgetSettings,
-    );
-
-    useEffect(() => {
-        const result = useDashboardStore.persist.rehydrate();
-        Promise.resolve(result).finally(() => {
-            setHydrated(true);
-        });
-    }, []);
-
-    // Ref появляется только после hydrate — нужно перезамерить ширину
-    useEffect(() => {
-        if (!hydrated) return;
-        measureWidth();
-    }, [hydrated, measureWidth, widgets.length]);
-
-    const handleLayoutChange = (nextLayout: Layout) => {
-        setLayout(
-            nextLayout.map((item) => ({
-                i: item.i,
-                x: item.x,
-                y: item.y,
-                w: item.w,
-                h: item.h,
-                minW: item.minW,
-                minH: item.minH,
-            })),
-        );
-    };
+const Dashboard = ({ }: DashboardProps) => {
+    const {
+        hydrated,
+        widgets,
+        layout,
+        catalog,
+        width,
+        containerRef,
+        mounted,
+        handleLayoutChange,
+        handleInvalidateCountriesCache,
+        handleAddWidget,
+        handleRemoveWidget,
+        updateWidgetSettings,
+    } = useDashboard();
 
     if (!hydrated) {
         return (
@@ -148,8 +106,7 @@ const Dashboard = ({}: DashboardProps) => {
                 <div>
                     <h1 className={styles.heading}>Dashboard Builder</h1>
                     <p className={styles.hint}>
-                        Add widgets, drag to rearrange. Config is saved in local
-                        storage.
+                        Add widgets, drag to rearrange. Config is saved in local storage.
                     </p>
                 </div>
                 <Button
@@ -157,24 +114,20 @@ const Dashboard = ({}: DashboardProps) => {
                     variant="secondary"
                     size="md"
                     dataQa="dashboard-invalidate-cache"
-                    onClick={() => {
-                        void queryClient.invalidateQueries({
-                            queryKey: countryKeys.all,
-                        });
-                    }}
+                    onClick={handleInvalidateCountriesCache}
                 >
                     Invalidate countries cache
                 </Button>
             </header>
 
             <div className={styles.catalog} data-qa="dashboard-catalog">
-                {WIDGET_CATALOG.map((item) => (
+                {catalog.map((item) => (
                     <button
                         key={item.type}
                         type="button"
                         className={styles.catalogItem}
                         data-qa={`dashboard-catalog-item-${item.type}`}
-                        onClick={() => addWidget(item.type)}
+                        onClick={() => handleAddWidget(item.type)}
                     >
                         <span className={styles.catalogBadge}>{item.type}</span>
                         <span className={styles.catalogTitle}>{item.title}</span>
@@ -185,7 +138,6 @@ const Dashboard = ({}: DashboardProps) => {
                 ))}
             </div>
 
-            {/* Контейнер всегда в DOM — иначе useContainerWidth не замерит ширину */}
             <div
                 ref={containerRef as RefObject<HTMLDivElement>}
                 className={styles.gridWrap}
@@ -202,7 +154,7 @@ const Dashboard = ({}: DashboardProps) => {
                         layout={layout}
                         compactor={verticalCompactor}
                         gridConfig={{
-                            cols: COLS,
+                            cols: DASHBOARD_GRID_COLS,
                             rowHeight: 36,
                             margin: [16, 16],
                             containerPadding: [0, 0],
@@ -240,7 +192,7 @@ const Dashboard = ({}: DashboardProps) => {
                                         variant="danger"
                                         size="sm"
                                         dataQa="dashboard-widget-remove"
-                                        onClick={() => removeWidget(widget.id)}
+                                        onClick={() => handleRemoveWidget(widget.id)}
                                     >
                                         Remove
                                     </Button>

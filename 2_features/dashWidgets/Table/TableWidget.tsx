@@ -7,52 +7,52 @@ import styles from './TableWidget.module.scss';
 import { useTableWidget } from './TableWidget.hooks';
 
 const COLUMNS = [
-  { key: 'name', title: 'Country' },
-  { key: 'region', title: 'Region' },
-  { key: 'capital', title: 'Capital' },
-  { key: 'population', title: 'Population' },
+    { key: 'name', title: 'Country' },
+    { key: 'region', title: 'Region' },
+    { key: 'capital', title: 'Capital' },
+    { key: 'population', title: 'Population' },
 ];
 
 type TableWidgetProps = {
-  countryCodes: string[];
-  onCountryCodesChange: (countryCodes: string[]) => void;
+    countryCodes: string[];
+    onCountryCodesChange: (countryCodes: string[]) => void;
 };
 
 export const TableWidget = ({
-  countryCodes,
-  onCountryCodesChange,
+    countryCodes,
+    onCountryCodesChange,
 }: TableWidgetProps) => {
-  const {
-    options,
-    rows,
-    isLoading,
-    error,
-    selectLabel,
-    isSelectDisabled,
-    onRefresh,
-  } = useTableWidget({ countryCodes });
+    const {
+        options,
+        rows,
+        isLoading,
+        error,
+        selectLabel,
+        isSelectDisabled,
+        onRefresh,
+    } = useTableWidget({ countryCodes });
 
-  return (
-    <div className={styles.root} data-qa="feature-table-widget">
-      <MultiSelect
-        label={selectLabel}
-        options={options}
-        value={countryCodes}
-        searchable
-        searchPlaceholder="Filter countries…"
-        disabled={isSelectDisabled}
-        dataQa="feature-table-country-multiselect"
-        onChange={onCountryCodesChange}
-      />
-      <Table
-        columns={COLUMNS}
-        rows={rows}
-        isLoading={isLoading}
-        error={error}
-        emptyMessage="Select at least one country to show the table"
-        onRefresh={onRefresh}
-        dataQa="entity-table"
-      />
-    </div>
-  );
+    return (
+        <div className={styles.root} data-qa="feature-table-widget">
+            <MultiSelect
+                label={selectLabel}
+                options={options}
+                value={countryCodes}
+                searchable
+                searchPlaceholder="Filter countries…"
+                disabled={isSelectDisabled}
+                dataQa="feature-table-country-multiselect"
+                onChange={onCountryCodesChange}
+            />
+            <Table
+                columns={COLUMNS}
+                rows={rows}
+                isLoading={isLoading}
+                error={error}
+                emptyMessage="Select at least one country to show the table"
+                onRefresh={onRefresh}
+                dataQa="entity-table"
+            />
+        </div>
+    );
 };
