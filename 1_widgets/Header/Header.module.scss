@@ -1,1 +1,30 @@
 @use '@styles/mixins' as mixins;
+@use '@styles/functions' as functions;
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--bg-default) 92%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: functions.rem(16);
+  width: 100%;
+  max-width: functions.rem(1440);
+  margin: 0 auto;
+  @include mixins.px-var(var(--global-px));
+  @include mixins.py(16);
+}
+
+.meta {
+  @include mixins.font-size(13);
+  color: var(--text-description);
+  white-space: nowrap;
+}

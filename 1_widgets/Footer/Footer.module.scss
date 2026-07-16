@@ -1,1 +1,33 @@
 @use '@styles/mixins' as mixins;
+@use '@styles/functions' as functions;
+
+.footer {
+  width: 100%;
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-default);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: functions.rem(16);
+  width: 100%;
+  max-width: functions.rem(1440);
+  margin: 0 auto;
+  @include mixins.px-var(var(--global-px));
+  @include mixins.py(20);
+}
+
+.copy {
+  @include mixins.font-size(13);
+  color: var(--text-description);
+}
+
+@include mixins.sm() {
+  .inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

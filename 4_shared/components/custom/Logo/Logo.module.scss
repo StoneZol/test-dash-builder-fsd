@@ -1,0 +1,39 @@
+@use '@styles/mixins' as mixins;
+@use '@styles/functions' as functions;
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.rem(8);
+  font-weight: var(--font-semibold);
+  @include mixins.font-size(18);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  @include mixins.transition(opacity);
+
+  @include mixins.hover() {
+    opacity: 0.8;
+  }
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include mixins.square(functions.rem(28));
+  @include mixins.border-radius(functions.rem(8));
+  background: var(--color-accent);
+  color: var(--text-white);
+  font-weight: var(--font-bold);
+  @include mixins.font-size(13);
+  line-height: 1;
+}
+
+.title {
+  white-space: nowrap;
+}
+
+.dev {
+  color: var(--text-accent);
+  font-weight: var(--font-bold);
+}
