@@ -82,7 +82,7 @@ app/                  # Next.js App Router (страницы, layout, API routes
 
 ## Окружения
 
-Не только разные названия — разное поведение через env и `featureConfig`.
+Не только разные названия — разное поведение через env и `featureConfig` (feature flags).
 
 | | Development | Production |
 |---|-------------|------------|
@@ -90,9 +90,11 @@ app/                  # Next.js App Router (страницы, layout, API routes
 | Metric / News (селект) | top 5 catalog | полный catalog |
 | Table (мультивыбор) | top 5 + detail queries | полный catalog + detail |
 | Chart (регионы) | 3 + `?region=` | все регионы + `?region=` |
-| Debug panel в Header | по флагу `NEXT_PUBLIC_ENABLE_DEBUG_PANEL` | обычно выключен |
+| Debug panel / метка в UI | по флагу `NEXT_PUBLIC_ENABLE_DEBUG_PANEL` | обычно выключен / Production |
 
 Секретный ключ: `API_KEY` (без `NEXT_PUBLIC_`). Upstream: `REST_COUNTRIES_API_BASE_URL`.
+
+**Про «разные API endpoints» из ТЗ.** Источник данных один — публичный REST Countries v5; отдельного staging/prod API у провайдера нет, поэтому клиентский proxy и upstream URL совпадают в обоих окружениях. Отличие env здесь сознательно через feature flags и UI (лимиты селектов, debug-панель), а не через второй фейковый бэкенд. В проде с реальным staging/prod API те же `envConfig` / `serverEnvConfig` просто указывали бы на разные base URL без смены архитектуры.
 
 ## Запуск локально
 
@@ -127,5 +129,7 @@ npm run build && npm run start   # production-сборка локально
 
 - **Дизайн** — более цельная визуальная система, типографика, отступы, состояния пустых экранов
 - **UX-friendly компоненты** — удобнее селекты, подсказки, анимации добавления/удаления, мобильная раскладка сетки
+- **TanStack Table** — сортировка, фильтрация, пагинация и виртуализация для Table-виджета вместо простой HTML-таблицы
+- **Виртуализация селектов** — виртуальный список опций в Select / MultiSelect (например, TanStack Virtual), чтобы длинный catalog в prod не тормозил DOM
 
 <!-- сюда можно дописать пункты -->

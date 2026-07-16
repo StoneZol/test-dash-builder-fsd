@@ -28,6 +28,7 @@ import {
     countryKeys,
     useCountriesCatalogQuery,
 } from '@/3_entities/api/country';
+import { Button } from '@/4_shared/components/custom';
 
 import styles from './Dashboard.module.scss';
 import type { DashboardProps } from './Dashboard.types';
@@ -151,9 +152,10 @@ const Dashboard = ({}: DashboardProps) => {
                         storage.
                     </p>
                 </div>
-                <button
+                <Button
                     type="button"
-                    className={styles.secondaryButton}
+                    variant="secondary"
+                    size="md"
                     onClick={() => {
                         void queryClient.invalidateQueries({
                             queryKey: countryKeys.all,
@@ -161,7 +163,7 @@ const Dashboard = ({}: DashboardProps) => {
                     }}
                 >
                     Invalidate countries cache
-                </button>
+                </Button>
             </header>
 
             <div className={styles.catalog}>
@@ -172,6 +174,7 @@ const Dashboard = ({}: DashboardProps) => {
                         className={styles.catalogItem}
                         onClick={() => addWidget(item.type)}
                     >
+                        <span className={styles.catalogBadge}>{item.type}</span>
                         <span className={styles.catalogTitle}>{item.title}</span>
                         <span className={styles.catalogDescription}>
                             {item.description}
@@ -220,13 +223,14 @@ const Dashboard = ({}: DashboardProps) => {
                                     <h3 className={styles.itemTitle}>
                                         {getWidgetTitle(widget)}
                                     </h3>
-                                    <button
+                                    <Button
                                         type="button"
-                                        className={styles.remove}
+                                        variant="danger"
+                                        size="sm"
                                         onClick={() => removeWidget(widget.id)}
                                     >
                                         Remove
-                                    </button>
+                                    </Button>
                                 </div>
                                 <div className={styles.itemBody}>
                                     {renderWidget({

@@ -1,3 +1,5 @@
+import { Button } from '@/4_shared/components/custom';
+
 import styles from './Table.module.scss';
 import type { TableProps } from './Table.types';
 
@@ -15,14 +17,15 @@ const Table = ({
     <article className={styles.root}>
       {onRefresh ? (
         <div className={styles.toolbar}>
-          <button
+          <Button
             type="button"
-            className={styles.refresh}
+            variant="ghost"
+            size="sm"
             onClick={onRefresh}
             disabled={isLoading}
           >
             Refresh
-          </button>
+          </Button>
         </div>
       ) : null}
 

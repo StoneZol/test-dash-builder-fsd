@@ -1,51 +1,39 @@
 @use '@styles/mixins' as mixins;
 
 .root {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    height: 100%;
-    padding: 16px;
-    border: 1px solid var(--border-color);
-    background: var(--bg-default);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  padding: 16px;
+  background: transparent;
 }
 
 .toolbar {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.refresh {
-    font-size: 12px;
-    color: var(--text-accent);
-    cursor: pointer;
-
-    &:disabled {
-        opacity: 0.5;
-        cursor: default;
-    }
+  display: flex;
+  justify-content: flex-end;
 }
 
 .value {
-    margin: 0;
-    font-size: 28px;
-    font-weight: var(--font-bold);
-    line-height: 1.2;
-    color: var(--text-primary);
+  margin: 0;
+  font-size: 28px;
+  font-weight: var(--font-bold);
+  line-height: 1.2;
+  color: var(--text-primary);
 }
 
 .description {
-    margin: 0;
-    font-size: 13px;
-    color: var(--text-description);
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-description);
 }
 
 .state,
 .error {
-    margin: 0;
-    font-size: 13px;
+  margin: 0;
+  font-size: 13px;
 }
 
 .error {
-    color: #c0392b;
+  color: #c0392b;
 }

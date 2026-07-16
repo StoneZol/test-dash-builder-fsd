@@ -24,6 +24,7 @@
   color: var(--text-primary);
   font-size: 13px;
   cursor: pointer;
+  @include mixins.border-radius(var(--radius-sm));
   @include mixins.transition(border-color);
 
   &:hover:not(:disabled) {

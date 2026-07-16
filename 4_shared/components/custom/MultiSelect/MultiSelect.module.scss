@@ -29,6 +29,7 @@
   font-size: 13px;
   text-align: left;
   cursor: pointer;
+  @include mixins.border-radius(var(--radius-sm));
   @include mixins.transition(border-color);
 
   &:hover:not(:disabled) {
@@ -77,8 +78,10 @@
   gap: functions.rem(6);
   padding: functions.rem(8);
   border: 1px solid var(--border-color);
-  background: var(--bg-default);
+  background: color-mix(in srgb, var(--bg-default) 96%, transparent);
+  backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px #11111114;
+  @include mixins.border-radius(var(--radius-md));
 }
 
 .search {
@@ -88,6 +91,7 @@
   background: var(--bg-default);
   color: var(--text-primary);
   font-size: 13px;
+  @include mixins.border-radius(var(--radius-sm));
 
   &::placeholder {
     color: var(--text-description);
@@ -119,6 +123,7 @@
   color: var(--text-primary);
   text-align: left;
   cursor: pointer;
+  @include mixins.border-radius(var(--radius-sm));
   @include mixins.transition((border-color, background-color));
 
   &:hover {

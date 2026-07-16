@@ -1,3 +1,5 @@
+export { Button } from './Button';
+export type { ButtonProps, ButtonSize, ButtonVariant } from './Button';
 export { Logo } from './Logo';
 export type { LogoProps } from './Logo';
 export { Select } from './Select';
