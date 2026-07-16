@@ -1,0 +1,116 @@
+@use '@styles/functions' as functions;
+@use 'sass:list';
+@use 'sass:meta';
+
+@mixin border-radius($radius: 50%) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    -o-border-radius: $radius;
+}
+
+@mixin transition($properties: all, $duration: 0.2s, $ease: ease-in) {
+    $transitions: (
+    );
+
+@if meta.type-of($properties)=='list' {
+    @each $property in $properties {
+        $transitions: list.append($transitions,
+                #{$property} $duration $ease,
+                $separator: comma);
+    }
+}
+
+@else {
+    $transitions: (
+        #{$properties} $duration $ease
+    );
+}
+
+transition: $transitions;
+-webkit-transition: $transitions;
+-moz-transition: $transitions;
+-ms-transition: $transitions;
+-o-transition: $transitions;
+}
+
+@mixin adaptive-transition($duration: 0.3s, $ease: ease-in-out) {
+    @include transition((width, height, max-width, min-width, transform), $duration, $ease);
+}
+
+@mixin transform($value) {
+    transform: $value;
+    -webkit-transform: $value;
+    -moz-transform: $value;
+    -ms-transform: $value;
+    -o-transform: $value;
+}
+
+@mixin square($size) {
+    width: $size;
+    height: $size;
+}
+
+@mixin font-size($size) {
+    font-size: $size * 1px;
+    font-size: functions.rem($size);
+}
+
+@mixin hover() {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+}
+
+@mixin px ($size) {
+    padding-left: functions.rem($size);
+    padding-right: functions.rem($size);
+}
+
+@mixin py ($size) {
+    padding-top: functions.rem($size);
+    padding-bottom: functions.rem($size);
+}
+
+@mixin px-var ($size) {
+    padding-left: $size;
+    padding-right: $size;
+}
+
+@mixin py-var ($size) {
+    padding-top: $size;
+    padding-bottom: $size;
+}
+
+@mixin sm() {
+    @media (max-width: 767px) {
+        @content;
+    }
+}
+
+@mixin md() {
+    @media (min-width: 768px) and (max-width: 1023px) {
+        @content;
+    }
+}
+
+@mixin lg() {
+    @media (min-width: 1024px) and (max-width: 1280px) {
+        @content;
+    }
+}
+
+@mixin xl() {
+    @media (min-width: 1281px) and (max-width: 1769px) {
+        @content;
+    }
+}
+
+@mixin xxl() {
+    @media (min-width: 1770px) {
+        @content;
+    }
+}

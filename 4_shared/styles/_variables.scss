@@ -1,0 +1,64 @@
+@use '@styles/mixins' as mixins;
+
+:root {
+
+    --color-accent: #2F80ED;
+
+    --border-color: #11111133;
+
+    --text-accent: #2F80ED;
+    --text-primary: #111111;
+    --text-description: #11111180;
+    --text-black: #000000;
+    --text-white: #FFFFFF;
+
+    --bg-default: #FFFFFF;
+
+    --player-overlay: #2F80ED4D;
+
+    --linear-h-120: 120%;
+    --linear-h-140: 140%;
+    --linear-h-160: 160%;
+
+    --font-bold: 700;
+    --font-semibold: 600;
+    --font-normal: 400;
+    --font-light: 300;
+
+    --global-px: 40px;
+    --global-py: 29px;
+    --global-pb: 40px;
+    --global-pt: 100px;
+
+    --z-header: 999;
+    --z-header-dropdown: 1100;
+
+    @include mixins.sm() {
+        --global-px: 20px;
+        --global-py: 14.5px;
+        --global-pb: 20px;
+        --global-pt: 70px;
+    }
+
+    @include mixins.md() {
+        --global-px: 20px;
+        --global-py: 14.5px;
+        --global-pb: 20px;
+        --global-pt: 70px;
+    }
+
+    @include mixins.lg() {
+        --global-px: 30px;
+        --global-py: 20px;
+        --global-pb: 30px;
+        --global-pt: 80px;
+    }
+
+    @include mixins.xxl() {
+        --global-px: 80px;
+        --global-py: 42px;
+        --global-pb: 80px;
+        --global-pt: 130px;
+    }
+
+}

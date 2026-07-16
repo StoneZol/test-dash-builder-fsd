@@ -1,24 +1,30 @@
 {
-  "name": "test-dash-builder-fsd",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "next": "16.2.10",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.10",
-    "typescript": "^5"
-  }
+    "name": "test-dash-builder-fsd",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "eslint"
+    },
+    "dependencies": {
+        "@hookform/resolvers": "^5.4.0",
+        "@tanstack/react-query": "^5.101.2",
+        "next": "^14.2.23",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-grid-layout": "^2.2.3",
+        "sass": "^1.101.0",
+        "zod": "^4.4.3",
+        "zustand": "^5.0.14"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^18.3.12",
+        "@types/react-dom": "^18.3.1",
+        "eslint": "^9",
+        "eslint-config-next": "16.2.10",
+        "typescript": "^5"
+    }
 }
