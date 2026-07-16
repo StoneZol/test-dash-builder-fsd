@@ -1,5 +1,5 @@
 import { requestWithSchema } from '@/4_shared/api';
-import { envConfig } from '@/4_shared/configs';
+import { envConfig, featureConfig } from '@/4_shared/configs';
 import {
   countriesCatalogResponseSchema,
   countriesV5ResponseSchema,
@@ -43,11 +43,13 @@ const buildProxyUrl = (path = '', query: Record<string, string> = {}) => {
 
 /**
  * Shared select catalog (light payload).
- * Same resource → `countryKeys.catalog()` → shared across widgets.
+ * Limit comes from `featureConfig.catalogLimit` (dev: 5, prod: 100) — applied on the API.
+ * Same resource → `countryKeys.catalog(limit)` → shared across widgets.
  */
 export const getCountriesCatalog = async (): Promise<CountryCatalogItem[]> => {
+  const limit = featureConfig.catalogLimit;
   const response = await requestWithSchema({
-    url: buildProxyUrl('catalog'),
+    url: buildProxyUrl('catalog', { limit: String(limit) }),
     schema: countriesCatalogResponseSchema,
   });
 

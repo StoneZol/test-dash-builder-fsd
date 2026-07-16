@@ -13,7 +13,7 @@ const CATALOG_FIELDS = [
   'population',
 ].join(',');
 
-const CATALOG_SIZE = 100;
+const DEFAULT_CATALOG_SIZE = 100;
 const PAGE_SIZE = 100;
 const MAX_OFFSET = 500;
 
@@ -29,11 +29,23 @@ const buildUpstreamListUrl = (query: Record<string, string>) => {
 
 type CatalogRow = CountryCatalogItem & { population: number };
 
+type FetchCountriesCatalogOptions = {
+  /** Max countries to return after sort-by-population (dev: 5, prod: 100). */
+  limit?: number;
+};
+
 /**
- * Server-only: paginate a light field set, sort by population, return top-100
+ * Server-only: paginate a light field set, sort by population, return top-N
  * catalog entries (name + alpha-3 + region) for widget selects.
  */
-export const fetchCountriesCatalog = async (): Promise<CountryCatalogItem[]> => {
+export const fetchCountriesCatalog = async (
+  options: FetchCountriesCatalogOptions = {},
+): Promise<CountryCatalogItem[]> => {
+  const limit = Math.min(
+    Math.max(options.limit ?? DEFAULT_CATALOG_SIZE, 1),
+    DEFAULT_CATALOG_SIZE,
+  );
+
   let offset = 0;
   let more = true;
   const collected: CatalogRow[] = [];
@@ -83,6 +95,6 @@ export const fetchCountriesCatalog = async (): Promise<CountryCatalogItem[]> => 
 
   return collected
     .sort((a, b) => b.population - a.population)
-    .slice(0, CATALOG_SIZE)
+    .slice(0, limit)
     .map(({ name, cca3, region }) => ({ name, cca3, region }));
 };

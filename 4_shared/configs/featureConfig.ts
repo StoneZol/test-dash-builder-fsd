@@ -1,17 +1,17 @@
 import { envConfig } from './envConfig';
 
 /**
- * Env-dependent UI limits over the shared countries catalog (~100 light entries).
- * Dev keeps option lists short; prod exposes the full catalog.
+ * Env-dependent catalog size and UI limits.
+ * Dev fetches a short catalog from the API; prod gets the full top-100 list.
  */
 export const featureConfig = {
-  /** Max countries in Metric / News selects. `null` = all from catalog. */
-  spotlightCountriesLimit: envConfig.isProduction ? null : 5,
+  /**
+   * How many countries the `/api/countries/catalog` endpoint returns.
+   * Applied on the server — client does not download unused options.
+   */
+  catalogLimit: envConfig.isProduction ? 100 : 5,
 
-  /** Max countries in Table multi-select. `null` = all from catalog. */
-  tableCountriesLimit: envConfig.isProduction ? null : 5,
-
-  /** Max regions in Chart multi-select. `null` = all regions from catalog. */
+  /** Max regions in Chart multi-select (derived from catalog). `null` = all. */
   chartRegionsLimit: envConfig.isProduction ? null : 3,
 
   isDevelopment: envConfig.isDevelopment,

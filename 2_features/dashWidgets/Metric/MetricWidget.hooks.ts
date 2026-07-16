@@ -12,7 +12,7 @@ import {
   mapCatalogToSelectOptions,
   mapCountryToMetricView,
 } from '@/3_entities/models/country';
-import { featureConfig, limitList } from '@/4_shared/configs';
+import { featureConfig } from '@/4_shared/configs';
 
 type UseMetricWidgetArgs = {
   countryCode: string;
@@ -28,11 +28,7 @@ export const useMetricWidget = ({
   const detailQuery = useCountryByAlpha3Query(countryCode);
 
   const options = useMemo(
-    () =>
-      limitList(
-        mapCatalogToSelectOptions(catalogQuery.data ?? []),
-        featureConfig.spotlightCountriesLimit,
-      ),
+    () => mapCatalogToSelectOptions(catalogQuery.data ?? []),
     [catalogQuery.data],
   );
 
@@ -56,13 +52,13 @@ export const useMetricWidget = ({
         : null,
     selectLabel: featureConfig.isProduction
       ? 'Country (prod · full catalog)'
-      : 'Country (dev · top 5)',
+      : 'Country (dev · API top 5)',
     isSelectDisabled: catalogQuery.isLoading || options.length === 0,
     onRefresh: () => {
       void queryClient.invalidateQueries({
         queryKey: countryCode
           ? countryKeys.byAlpha3(countryCode)
-          : countryKeys.catalog(),
+          : countryKeys.catalog(featureConfig.catalogLimit),
       });
     },
   };

@@ -27,7 +27,7 @@ export const getWidgetTitle = (widget: WidgetInstance) =>
     getCatalogItem(widget.type)?.title ?? widget.type;
 
 /**
- * Dashboard widget: store, hydrate, grid measure, catalog prefetch, actions.
+ * Dashboard widget: store, hydrate, grid measure, catalog query, actions.
  */
 export const useDashboard = () => {
     const queryClient = useQueryClient();
@@ -45,7 +45,7 @@ export const useDashboard = () => {
         (state) => state.updateWidgetSettings,
     );
 
-    useCountriesCatalogQuery({ enabled: widgets.length > 0 });
+    useCountriesCatalogQuery();
 
     useEffect(() => {
         const result = useDashboardStore.persist.rehydrate();

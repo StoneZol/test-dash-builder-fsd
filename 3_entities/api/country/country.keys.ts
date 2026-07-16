@@ -7,8 +7,12 @@
 export const countryKeys = {
   all: ['countries'] as const,
 
-  /** Light name/code/region list for selects — shared by all widgets. */
-  catalog: () => [...countryKeys.all, 'catalog'] as const,
+  /**
+   * Light name/code/region list for selects.
+   * `limit` is part of the key so dev (5) and prod (100) do not share cache entries.
+   */
+  catalog: (limit: number) =>
+    [...countryKeys.all, 'catalog', limit] as const,
 
   details: () => [...countryKeys.all, 'detail'] as const,
   /** Metric / News / Table row — `GET .../codes.alpha_3/{code}`. */

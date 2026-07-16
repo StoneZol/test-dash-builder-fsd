@@ -65,7 +65,7 @@ export const useChartWidget = ({ regions }: UseChartWidgetArgs) => {
     onRefresh: () => {
       if (regions.length === 0) {
         void queryClient.invalidateQueries({
-          queryKey: countryKeys.catalog(),
+          queryKey: countryKeys.catalog(featureConfig.catalogLimit),
         });
         return;
       }

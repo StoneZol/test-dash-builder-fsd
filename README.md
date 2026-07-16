@@ -71,16 +71,19 @@ app/                  # Next.js App Router (страницы, layout, API routes
 3. **Прокси `/api/countries`**  
    `API_KEY` и upstream URL — только на сервере (`serverEnvConfig`). Клиент ходит на `NEXT_PUBLIC_APP_API_BASE_URL`.
 
-4. **Один light-catalog, разные лимиты UI + разные data-query**  
-   Dev/prod делят один catalog top-100; в development короче селекты. Данные виджетов не берутся из catalog — только из detail/region queries.
+4. **Catalog limit на API (dev vs prod)**  
+   `featureConfig.catalogLimit` (dev: 5, prod: 100) уходит в `GET /api/countries/catalog?limit=`. Клиент не качает полный список, чтобы потом `slice`. Регионы Chart по-прежнему можно урезать через `chartRegionsLimit`.
 
 5. **Persist + `skipHydration`**  
    Конфиг в `localStorage` (`dashboard-config-v4`), ручная rehydrate после монтирования — без рассинхрона SSR/клиента.
 
-6. **Размещение виджетов**  
+6. **SSR prefetch catalog (где уместно)**  
+   В `app/page.tsx` (RSC) catalog префетчится через `fetchCountriesCatalog({ limit })` + `HydrationBoundary`. Detail/region остаются на клиенте (зависят от выбора пользователя). Сетка дашборда — client-only из‑за DnD и persist.
+
+7. **Размещение виджетов**  
    При добавлении ищется первая свободная ячейка (слева направо, сверху вниз), а не всегда новая строка.
 
-7. **`data-qa` на ключевых UI-элементах**  
+8. **`data-qa` на ключевых UI-элементах**  
    Каталог, виджеты, селекты, Refresh/Remove — стабильные селекторы для e2e / QA без привязки к классам и тексту.
 
 ## Окружения
@@ -90,9 +93,9 @@ app/                  # Next.js App Router (страницы, layout, API routes
 |                          | Development                               | Production                   |
 | ------------------------ | ----------------------------------------- | ---------------------------- |
 | `NEXT_PUBLIC_APP_ENV`    | `development`                             | `production`                 |
-| Metric / News (селект)   | top 5 catalog                             | полный catalog               |
-| Table (мультивыбор)      | top 5 + detail queries                    | полный catalog + detail      |
-| Chart (регионы)          | 3                                         | все из catalog               |
+| Metric / News (селект)   | catalog API limit 5                       | catalog API limit 100        |
+| Table (мультивыбор)      | catalog API limit 5 + detail              | catalog 100 + detail         |
+| Chart (регионы)          | до 3 из catalog                           | все из catalog               |
 | Debug panel / метка в UI | по флагу `NEXT_PUBLIC_ENABLE_DEBUG_PANEL` | обычно выключен / Production |
 
 Секретный ключ: `API_KEY` (без `NEXT_PUBLIC_`). Upstream: `REST_COUNTRIES_API_BASE_URL`.

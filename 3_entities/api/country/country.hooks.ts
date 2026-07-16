@@ -6,6 +6,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { featureConfig } from '@/4_shared/configs';
+
 import {
   getCountriesByRegion,
   getCountriesCatalog,
@@ -25,12 +27,16 @@ type EnabledOption = {
   enabled?: boolean;
 };
 
-/** Shared light catalog for selects (`countryKeys.catalog`). */
+/** Shared light catalog for selects (`countryKeys.catalog(limit)`).
+ * Prefetched on the server in `app/page.tsx` and hydrated via HydrationBoundary.
+ * Size is env-limited on the API (`featureConfig.catalogLimit`).
+ */
 export const useCountriesCatalogQuery = (options: EnabledOption = {}) => {
   const { enabled = true } = options;
+  const limit = featureConfig.catalogLimit;
 
   return useQuery({
-    queryKey: countryKeys.catalog(),
+    queryKey: countryKeys.catalog(limit),
     queryFn: getCountriesCatalog,
     enabled,
     ...CATALOG_QUERY_OPTIONS,
@@ -94,7 +100,7 @@ export const useInvalidateCountriesCatalog = () => {
 
   return () =>
     queryClient.invalidateQueries({
-      queryKey: countryKeys.catalog(),
+      queryKey: countryKeys.catalog(featureConfig.catalogLimit),
     });
 };
 

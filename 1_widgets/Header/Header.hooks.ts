@@ -1,22 +1,19 @@
 import { envConfig, featureConfig } from '@/4_shared/configs';
 
-const formatLimit = (limit: number | null) =>
-    limit == null ? 'all' : String(limit);
-
 /**
  * Header meta: env label + optional debug strip from feature flags.
  */
 export const useHeader = () => {
-    const showProduction = envConfig.isProduction;
-    const showDebugPanel = envConfig.enableDebugPanel;
+  const showProduction = envConfig.isProduction;
+  const showDebugPanel = envConfig.enableDebugPanel;
 
-    const debugText = showDebugPanel
-        ? `debug · light catalog top 100 · spotlight ${formatLimit(featureConfig.spotlightCountriesLimit)} · table ${formatLimit(featureConfig.tableCountriesLimit)} · regions ${formatLimit(featureConfig.chartRegionsLimit)}`
-        : null;
+  const debugText = showDebugPanel
+    ? `debug · catalog API limit ${featureConfig.catalogLimit} · chart regions ${featureConfig.chartRegionsLimit ?? 'all'}`
+    : null;
 
-    return {
-        showProduction,
-        showDebugPanel,
-        debugText,
-    };
+  return {
+    showProduction,
+    showDebugPanel,
+    debugText,
+  };
 };
