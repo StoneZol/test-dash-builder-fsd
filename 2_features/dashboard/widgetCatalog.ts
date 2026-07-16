@@ -7,10 +7,10 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
     type: 'table',
     title: 'Table',
     description: featureConfig.isProduction
-      ? 'Pick countries from full dataset (prod)'
-      : 'Pick from top 5 countries (dev)',
+      ? 'Detail queries per selected country (prod catalog)'
+      : 'Detail queries · top 5 catalog options (dev)',
     defaultSettings: {
-      countryNames: [],
+      countryCodes: [],
     },
     defaultSize: { w: 6, h: 10, minW: 4, minH: 6 },
   },
@@ -18,8 +18,8 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
     type: 'metric',
     title: 'Statistics',
     description: featureConfig.isProduction
-      ? 'Population metric · all countries'
-      : 'Population metric · top 5 countries (dev)',
+      ? 'Detail by alpha-3 · full catalog'
+      : 'Detail by alpha-3 · top 5 catalog (dev)',
     defaultSettings: {},
     defaultSize: { w: 3, h: 5, minW: 2, minH: 4 },
   },
@@ -27,7 +27,7 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
     type: 'chart',
     title: 'Chart',
     description: featureConfig.isProduction
-      ? 'Population by region · all regions'
+      ? 'Population by region · ?region= queries'
       : 'Population by region · 3 regions (dev)',
     defaultSettings: {
       regions: [],
@@ -38,8 +38,8 @@ export const WIDGET_CATALOG: WidgetCatalogItem[] = [
     type: 'news',
     title: 'News card',
     description: featureConfig.isProduction
-      ? 'Country briefing · all countries'
-      : 'Country briefing · top 5 countries (dev)',
+      ? 'Briefing via alpha-3 detail · full catalog'
+      : 'Briefing via alpha-3 detail · top 5 (dev)',
     defaultSettings: {},
     defaultSize: { w: 3, h: 6, minW: 2, minH: 5 },
   },

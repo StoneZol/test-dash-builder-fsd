@@ -7,12 +7,12 @@ import styles from './MetricWidget.module.scss';
 import { useMetricWidget } from './MetricWidget.hooks';
 
 type MetricWidgetProps = {
-  countryName?: string;
-  onCountryChange: (countryName: string) => void;
+  countryCode?: string;
+  onCountryChange: (countryCode: string) => void;
 };
 
 export const MetricWidget = ({
-  countryName = '',
+  countryCode = '',
   onCountryChange,
 }: MetricWidgetProps) => {
   const {
@@ -23,13 +23,13 @@ export const MetricWidget = ({
     selectLabel,
     isSelectDisabled,
     onRefresh,
-  } = useMetricWidget({ countryName, onCountryChange });
+  } = useMetricWidget({ countryCode, onCountryChange });
 
   return (
     <div className={styles.root}>
       <Select
         label={selectLabel}
-        value={countryName}
+        value={countryCode}
         options={options}
         disabled={isSelectDisabled}
         onChange={onCountryChange}

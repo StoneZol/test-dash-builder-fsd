@@ -1,4 +1,4 @@
-import type { Country } from './country.schema';
+import type { Country, CountryCatalogItem } from './country.schema';
 
 export type CountrySelectOption = {
   value: string;
@@ -31,24 +31,25 @@ export type CountryNewsView = {
   imageAlt?: string;
 };
 
-export const findCountryByName = (
+export const findCountryByCode = (
   countries: Country[],
-  name: string,
+  cca3: string,
 ): Country | undefined =>
-  countries.find((country) => country.name.common === name);
+  countries.find((country) => country.cca3 === cca3);
 
-export const mapCountriesToSelectOptions = (
-  countries: Country[],
+/** Select options: value is ISO alpha-3 for stable detail/list queries. */
+export const mapCatalogToSelectOptions = (
+  catalog: CountryCatalogItem[],
 ): CountrySelectOption[] =>
-  countries.map((country) => ({
-    value: country.name.common,
-    label: country.name.common,
+  catalog.map((item) => ({
+    value: item.cca3,
+    label: item.name,
   }));
 
-export const mapCountriesToRegionOptions = (
-  countries: Country[],
+export const mapCatalogToRegionOptions = (
+  catalog: CountryCatalogItem[],
 ): CountrySelectOption[] =>
-  [...new Set(countries.map((country) => country.region))]
+  [...new Set(catalog.map((item) => item.region).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b))
     .map((region) => ({
       value: region,
@@ -57,15 +58,8 @@ export const mapCountriesToRegionOptions = (
 
 export const mapCountriesToTableRows = (
   countries: Country[],
-  selectedNames: string[] = [],
-): CountryTableRow[] => {
-  const selected = new Set(selectedNames);
-  const filtered =
-    selected.size > 0
-      ? countries.filter((country) => selected.has(country.name.common))
-      : [];
-
-  return [...filtered]
+): CountryTableRow[] =>
+  [...countries]
     .sort((a, b) => b.population - a.population)
     .map((country) => ({
       cca3: country.cca3,
@@ -74,30 +68,17 @@ export const mapCountriesToTableRows = (
       capital: country.capital[0] ?? '—',
       population: country.population.toLocaleString('en-US'),
     }));
-};
 
 export const mapCountriesToChartBars = (
-  countries: Country[],
-  selectedRegions: string[] = [],
-): CountryChartBar[] => {
-  if (selectedRegions.length === 0) {
-    return [];
-  }
-
-  const allowed = new Set(selectedRegions);
-  const byRegion = countries.reduce<Record<string, number>>((acc, country) => {
-    if (!allowed.has(country.region)) {
-      return acc;
-    }
-
-    acc[country.region] = (acc[country.region] ?? 0) + country.population;
-    return acc;
-  }, {});
-
-  return Object.entries(byRegion)
-    .map(([label, value]) => ({ label, value }))
+  countriesByRegion: Array<{ region: string; countries: Country[] }>,
+): CountryChartBar[] =>
+  countriesByRegion
+    .map(({ region, countries }) => ({
+      label: region,
+      value: countries.reduce((sum, country) => sum + country.population, 0),
+    }))
+    .filter((bar) => bar.value > 0)
     .sort((a, b) => b.value - a.value);
-};
 
 export const mapCountryToMetricView = (country: Country): CountryMetricView => ({
   value: country.population.toLocaleString('en-US'),

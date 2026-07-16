@@ -1,12 +1,16 @@
 import { requestWithSchema } from '@/4_shared/api';
 import { envConfig } from '@/4_shared/configs';
 import {
+  countriesCatalogResponseSchema,
   countriesV5ResponseSchema,
+  countryV5DetailResponseSchema,
+  mapCountryV5DetailResponse,
   mapCountryV5ToDomain,
   type Country,
+  type CountryCatalogItem,
 } from '@/3_entities/models/country';
 
-const RESPONSE_FIELDS = [
+const DETAIL_FIELDS = [
   'names.common',
   'names.official',
   'codes.alpha_3',
@@ -16,64 +20,69 @@ const RESPONSE_FIELDS = [
   'flag',
 ].join(',');
 
+const REGION_FIELDS = [
+  'names.common',
+  'names.official',
+  'codes.alpha_3',
+  'population',
+  'region',
+  'capitals',
+].join(',');
+
+/** Build a URL against the Next.js countries proxy. */
 const buildProxyUrl = (path = '', query: Record<string, string> = {}) => {
   const base = envConfig.appApiBaseUrl.replace(/\/$/, '');
   const pathname = path
     ? `${base}/countries/${path.replace(/^\//, '')}`
     : `${base}/countries`;
-  const params = new URLSearchParams({
-    response_fields: RESPONSE_FIELDS,
-    ...query,
+  const params = new URLSearchParams(query);
+  const search = params.toString();
+
+  return search ? `${pathname}?${search}` : pathname;
+};
+
+/**
+ * Shared select catalog (light payload).
+ * Same resource → `countryKeys.catalog()` → shared across widgets.
+ */
+export const getCountriesCatalog = async (): Promise<CountryCatalogItem[]> => {
+  const response = await requestWithSchema({
+    url: buildProxyUrl('catalog'),
+    schema: countriesCatalogResponseSchema,
   });
 
-  return `${pathname}?${params.toString()}`;
+  return response.data;
 };
 
-/** Shared dataset: fetch all pages, keep top 100 by population. */
-export const getCountries = async (): Promise<Country[]> => {
-  const pageSize = 100;
-  let offset = 0;
-  let more = true;
-  const collected: Country[] = [];
+/**
+ * Single-country detail by ISO alpha-3 (`/codes.alpha_3/{code}`).
+ * Used by Metric / News — separate query key per code.
+ */
+export const getCountryByAlpha3 = async (cca3: string): Promise<Country> => {
+  const response = await requestWithSchema({
+    url: buildProxyUrl(`codes.alpha_3/${encodeURIComponent(cca3)}`, {
+      response_fields: DETAIL_FIELDS,
+    }),
+    schema: countryV5DetailResponseSchema,
+  });
 
-  while (more) {
-    const response = await requestWithSchema({
-      url: buildProxyUrl('', {
-        limit: String(pageSize),
-        offset: String(offset),
-      }),
-      schema: countriesV5ResponseSchema,
-    });
-
-    collected.push(...response.data.objects.map(mapCountryV5ToDomain));
-
-    more = Boolean(response.data.meta?.more);
-    offset += pageSize;
-
-    if (response.data.objects.length === 0 || offset > 500) {
-      break;
-    }
-  }
-
-  return collected
-    .sort((a, b) => b.population - a.population)
-    .slice(0, 100);
+  return mapCountryV5DetailResponse(response);
 };
 
-export const getCountryByName = async (name: string): Promise<Country> => {
+/**
+ * Countries in a region (`?region=`). Used by Chart — key per region.
+ */
+export const getCountriesByRegion = async (
+  region: string,
+): Promise<Country[]> => {
   const response = await requestWithSchema({
     url: buildProxyUrl('', {
-      q: name,
-      limit: '1',
+      region,
+      response_fields: REGION_FIELDS,
+      limit: '100',
     }),
     schema: countriesV5ResponseSchema,
   });
 
-  const country = response.data.objects[0];
-
-  if (!country) {
-    throw new Error(`Country not found: ${name}`);
-  }
-
-  return mapCountryV5ToDomain(country);
+  return response.data.objects.map(mapCountryV5ToDomain);
 };

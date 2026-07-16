@@ -1,3 +1,7 @@
+/**
+ * Shared HTTP primitives for entity API modules:
+ * typed fetch, Zod validation, and structured errors.
+ */
 export {
   ApiHttpError,
   ApiSchemaError,

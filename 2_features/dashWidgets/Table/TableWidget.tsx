@@ -14,13 +14,13 @@ const COLUMNS = [
 ];
 
 type TableWidgetProps = {
-  countryNames: string[];
-  onCountryNamesChange: (countryNames: string[]) => void;
+  countryCodes: string[];
+  onCountryCodesChange: (countryCodes: string[]) => void;
 };
 
 export const TableWidget = ({
-  countryNames,
-  onCountryNamesChange,
+  countryCodes,
+  onCountryCodesChange,
 }: TableWidgetProps) => {
   const {
     options,
@@ -30,18 +30,18 @@ export const TableWidget = ({
     selectLabel,
     isSelectDisabled,
     onRefresh,
-  } = useTableWidget({ countryNames });
+  } = useTableWidget({ countryCodes });
 
   return (
     <div className={styles.root}>
       <MultiSelect
         label={selectLabel}
         options={options}
-        value={countryNames}
+        value={countryCodes}
         searchable
         searchPlaceholder="Filter countries…"
         disabled={isSelectDisabled}
-        onChange={onCountryNamesChange}
+        onChange={onCountryCodesChange}
       />
       <Table
         columns={COLUMNS}

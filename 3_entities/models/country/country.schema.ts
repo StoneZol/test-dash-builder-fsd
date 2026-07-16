@@ -4,13 +4,13 @@ import { z } from 'zod';
 export const countryV5Schema = z.object({
   names: z.object({
     common: z.string(),
-    official: z.string(),
+    official: z.string().optional().default(''),
   }),
   codes: z.object({
     alpha_3: z.string(),
   }),
-  population: z.number(),
-  region: z.string(),
+  population: z.number().optional().default(0),
+  region: z.string().optional().default(''),
   capitals: z
     .array(
       z.object({
@@ -40,6 +40,12 @@ export const countriesV5ResponseSchema = z.object({
   }),
 });
 
+/** Single-country upstream payload (`/codes.alpha_3/{code}` or list with one hit). */
+export const countryV5DetailResponseSchema = z.union([
+  z.object({ data: countryV5Schema }),
+  countriesV5ResponseSchema,
+]);
+
 /** Domain model used by widgets (stable, UI-friendly). */
 export const countrySchema = z.object({
   name: z.object({
@@ -61,13 +67,28 @@ export const countrySchema = z.object({
 
 export const countriesSchema = z.array(countrySchema);
 
+/** Lightweight select catalog entry (names + code + region only). */
+export const countryCatalogItemSchema = z.object({
+  name: z.string(),
+  cca3: z.string(),
+  region: z.string(),
+});
+
+export const countriesCatalogResponseSchema = z.object({
+  data: z.array(countryCatalogItemSchema),
+});
+
 export type CountryV5 = z.infer<typeof countryV5Schema>;
 export type Country = z.infer<typeof countrySchema>;
+export type CountryCatalogItem = z.infer<typeof countryCatalogItemSchema>;
+export type CountriesCatalogResponse = z.infer<
+  typeof countriesCatalogResponseSchema
+>;
 
 export const mapCountryV5ToDomain = (country: CountryV5): Country => ({
   name: {
     common: country.names.common,
-    official: country.names.official,
+    official: country.names.official || country.names.common,
   },
   cca3: country.codes.alpha_3,
   population: country.population,
@@ -81,3 +102,17 @@ export const mapCountryV5ToDomain = (country: CountryV5): Country => ({
       }
     : undefined,
 });
+
+export const mapCountryV5DetailResponse = (
+  body: z.infer<typeof countryV5DetailResponseSchema>,
+): Country => {
+  if ('objects' in body.data) {
+    const first = body.data.objects[0];
+    if (!first) {
+      throw new Error('Country not found');
+    }
+    return mapCountryV5ToDomain(first);
+  }
+
+  return mapCountryV5ToDomain(body.data);
+};

@@ -12,6 +12,13 @@ type RequestWithSchemaArgs<T> = {
   token?: string;
 };
 
+/**
+ * Fetch → read body → fail on HTTP error → validate with Zod.
+ * Primary entry point for typed API calls from entities / features.
+ *
+ * @throws {ApiHttpError} when `response.ok` is false
+ * @throws {ApiSchemaError} when the body fails schema validation
+ */
 export const requestWithSchema = async <T>({
   url,
   schema,

@@ -1,12 +1,12 @@
 export type WidgetType = 'table' | 'metric' | 'chart' | 'news';
 
 export type WidgetSettings = {
-  /** Spotlight country for Metric / News */
-  countryName?: string;
-  /** Selected regions for Chart */
+  /** ISO alpha-3 for Metric / News detail query */
+  countryCode?: string;
+  /** Selected regions for Chart (`?region=` queries) */
   regions?: string[];
-  /** Selected countries for Table (dev-limited list) */
-  countryNames?: string[];
+  /** ISO alpha-3 list for Table detail queries */
+  countryCodes?: string[];
 };
 
 export type WidgetInstance = {

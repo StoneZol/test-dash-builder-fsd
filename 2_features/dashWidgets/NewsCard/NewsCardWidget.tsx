@@ -7,12 +7,12 @@ import styles from './NewsCardWidget.module.scss';
 import { useNewsCardWidget } from './NewsCardWidget.hooks';
 
 type NewsCardWidgetProps = {
-  countryName?: string;
-  onCountryChange: (countryName: string) => void;
+  countryCode?: string;
+  onCountryChange: (countryCode: string) => void;
 };
 
 export const NewsCardWidget = ({
-  countryName = '',
+  countryCode = '',
   onCountryChange,
 }: NewsCardWidgetProps) => {
   const {
@@ -23,19 +23,19 @@ export const NewsCardWidget = ({
     selectLabel,
     isSelectDisabled,
     onRefresh,
-  } = useNewsCardWidget({ countryName, onCountryChange });
+  } = useNewsCardWidget({ countryCode, onCountryChange });
 
   return (
     <div className={styles.root}>
       <Select
         label={selectLabel}
-        value={countryName}
+        value={countryCode}
         options={options}
         disabled={isSelectDisabled}
         onChange={onCountryChange}
       />
       <NewsCard
-        title={news?.title ?? (countryName || 'Country')}
+        title={news?.title ?? 'Country'}
         subtitle={news?.subtitle}
         body={news?.body ?? 'Country briefing'}
         imageUrl={news?.imageUrl}

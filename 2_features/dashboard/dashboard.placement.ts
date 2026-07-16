@@ -1,5 +1,6 @@
 import type { DashboardLayoutItem } from './dashboard.types';
 
+/** Grid column count shared with `react-grid-layout` in the Dashboard widget. */
 export const DASHBOARD_COLS = 12;
 
 type Size = {
@@ -7,6 +8,7 @@ type Size = {
   h: number;
 };
 
+/** Axis-aligned rectangle intersection on the grid. */
 const collides = (
   a: Pick<DashboardLayoutItem, 'x' | 'y' | 'w' | 'h'>,
   b: Pick<DashboardLayoutItem, 'x' | 'y' | 'w' | 'h'>,
@@ -17,8 +19,13 @@ const collides = (
   a.y + a.h > b.y;
 
 /**
- * First free cell for a new item: left → right, then top → bottom.
- * Fills columns before opening a new row when space allows.
+ * Finds the first free cell for a new layout item.
+ * Scans left → right, then top → bottom, so free columns fill before a new row.
+ *
+ * @param layout - Current grid items
+ * @param size - Desired `w` / `h` (width is clamped to `cols`)
+ * @param cols - Grid width in columns (default {@link DASHBOARD_COLS})
+ * @returns Top-left `{ x, y }` for the new item
  */
 export const findNextLayoutPosition = (
   layout: DashboardLayoutItem[],

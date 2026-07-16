@@ -1,11 +1,17 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useCountriesQuery, useInvalidateCountries } from '@/3_entities/api/country';
 import {
+  countryKeys,
+  useCountriesByRegionQueries,
+  useCountriesCatalogQuery,
+} from '@/3_entities/api/country';
+import {
+  mapCatalogToRegionOptions,
   mapCountriesToChartBars,
-  mapCountriesToRegionOptions,
+  type Country,
 } from '@/3_entities/models/country';
 import { featureConfig, limitList } from '@/4_shared/configs';
 
@@ -14,34 +20,61 @@ type UseChartWidgetArgs = {
 };
 
 export const useChartWidget = ({ regions }: UseChartWidgetArgs) => {
-  const query = useCountriesQuery();
-  const invalidateCountries = useInvalidateCountries();
+  const queryClient = useQueryClient();
+  const catalogQuery = useCountriesCatalogQuery();
+  const regionQueries = useCountriesByRegionQueries(regions);
 
   const options = useMemo(
     () =>
       limitList(
-        mapCountriesToRegionOptions(query.data ?? []),
+        mapCatalogToRegionOptions(catalogQuery.data ?? []),
         featureConfig.chartRegionsLimit,
       ),
-    [query.data],
+    [catalogQuery.data],
   );
 
   const bars = useMemo(
-    () => mapCountriesToChartBars(query.data ?? [], regions),
-    [query.data, regions],
+    () =>
+      mapCountriesToChartBars(
+        regions.map((region, index) => ({
+          region,
+          countries: (regionQueries[index]?.data ?? []) as Country[],
+        })),
+      ),
+    [regions, regionQueries],
   );
+
+  const isRegionsLoading = regionQueries.some(
+    (query) => query.isLoading || query.isPending,
+  );
+  const regionError = regionQueries.find((query) => query.error)?.error;
 
   return {
     options,
     bars,
-    isLoading: query.isLoading || query.isFetching,
-    error: query.error ? (query.error as Error).message : null,
+    isLoading:
+      catalogQuery.isLoading || (regions.length > 0 && isRegionsLoading),
+    error:
+      catalogQuery.error || regionError
+        ? ((catalogQuery.error ?? regionError) as Error).message
+        : null,
     selectLabel: featureConfig.isProduction
-      ? 'Regions (prod · all from dataset)'
-      : 'Regions (dev · top 3)',
-    isSelectDisabled: query.isLoading || options.length === 0,
+      ? 'Regions (prod · ?region= queries)'
+      : 'Regions (dev · top 3 · ?region=)',
+    isSelectDisabled: catalogQuery.isLoading || options.length === 0,
     onRefresh: () => {
-      void invalidateCountries();
+      if (regions.length === 0) {
+        void queryClient.invalidateQueries({
+          queryKey: countryKeys.catalog(),
+        });
+        return;
+      }
+
+      regions.forEach((region) => {
+        void queryClient.invalidateQueries({
+          queryKey: countryKeys.byRegion(region),
+        });
+      });
     },
   };
 };

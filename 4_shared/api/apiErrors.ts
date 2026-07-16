@@ -1,5 +1,6 @@
 import type { ZodError } from 'zod';
 
+/** Non-2xx HTTP response from {@link requestWithSchema}. */
 export class ApiHttpError extends Error {
   readonly name = 'ApiHttpError';
 
@@ -12,6 +13,7 @@ export class ApiHttpError extends Error {
   }
 }
 
+/** Response body failed Zod validation in {@link requestWithSchema}. */
 export class ApiSchemaError extends Error {
   readonly name = 'ApiSchemaError';
 
@@ -26,8 +28,10 @@ export class ApiSchemaError extends Error {
 
 export type ApiError = ApiHttpError | ApiSchemaError;
 
+/** Type guard for {@link ApiHttpError}. */
 export const isApiHttpError = (error: unknown): error is ApiHttpError =>
   error instanceof ApiHttpError;
 
+/** Type guard for {@link ApiSchemaError}. */
 export const isApiSchemaError = (error: unknown): error is ApiSchemaError =>
   error instanceof ApiSchemaError;

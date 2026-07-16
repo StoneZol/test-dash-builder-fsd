@@ -12,12 +12,20 @@ import type {
   WidgetType,
 } from './dashboard.types';
 
+/**
+ * Client-only dashboard builder state.
+ * Holds widget instances + grid layout; server data stays in React Query.
+ */
 type DashboardState = {
   widgets: WidgetInstance[];
   layout: DashboardLayoutItem[];
+  /** Append a catalog widget and place it in the first free grid cell. */
   addWidget: (type: WidgetType) => void;
+  /** Remove a widget and its layout item by id. */
   removeWidget: (id: string) => void;
+  /** Replace layout after drag / resize (from react-grid-layout). */
   setLayout: (layout: DashboardLayoutItem[]) => void;
+  /** Patch per-widget settings (country, regions, etc.). */
   updateWidgetSettings: (
     id: string,
     settings: Partial<WidgetSettings>,
@@ -32,6 +40,10 @@ const createId = () => {
   return `widget-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
+/**
+ * Persisted dashboard config (`localStorage` key `dashboard-config-v4`).
+ * Uses `skipHydration` — call `persist.rehydrate()` after mount to avoid SSR mismatch.
+ */
 export const useDashboardStore = create<DashboardState>()(
   persist(
     (set, get) => ({
@@ -96,7 +108,7 @@ export const useDashboardStore = create<DashboardState>()(
       },
     }),
     {
-      name: 'dashboard-config-v3',
+      name: 'dashboard-config-v4',
       skipHydration: true,
       partialize: (state) => ({
         widgets: state.widgets,

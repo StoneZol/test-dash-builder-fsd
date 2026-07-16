@@ -22,7 +22,7 @@ const Header = ({ }: HeaderProps) => {
                                 Development environment
                             </p>
                             <p className={styles.debug}>
-                                debug · dataset top 100 · spotlight{' '}
+                                debug · light catalog top 100 · spotlight{' '}
                                 {formatLimit(featureConfig.spotlightCountriesLimit)} · table{' '}
                                 {formatLimit(featureConfig.tableCountriesLimit)} · regions{' '}
                                 {formatLimit(featureConfig.chartRegionsLimit)}

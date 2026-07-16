@@ -24,7 +24,10 @@ import {
     WIDGET_CATALOG,
     type WidgetInstance,
 } from '@/2_features/dashboard';
-import { countryKeys } from '@/3_entities/api/country';
+import {
+    countryKeys,
+    useCountriesCatalogQuery,
+} from '@/3_entities/api/country';
 
 import styles from './Dashboard.module.scss';
 import type { DashboardProps } from './Dashboard.types';
@@ -47,18 +50,18 @@ const renderWidget = ({ widget, onUpdateSettings }: RenderWidgetArgs) => {
         case 'table':
             return (
                 <TableWidget
-                    countryNames={widget.settings.countryNames ?? []}
-                    onCountryNamesChange={(countryNames) =>
-                        onUpdateSettings(widget.id, { countryNames })
+                    countryCodes={widget.settings.countryCodes ?? []}
+                    onCountryCodesChange={(countryCodes) =>
+                        onUpdateSettings(widget.id, { countryCodes })
                     }
                 />
             );
         case 'metric':
             return (
                 <MetricWidget
-                    countryName={widget.settings.countryName}
-                    onCountryChange={(countryName) =>
-                        onUpdateSettings(widget.id, { countryName })
+                    countryCode={widget.settings.countryCode}
+                    onCountryChange={(countryCode) =>
+                        onUpdateSettings(widget.id, { countryCode })
                     }
                 />
             );
@@ -74,9 +77,9 @@ const renderWidget = ({ widget, onUpdateSettings }: RenderWidgetArgs) => {
         case 'news':
             return (
                 <NewsCardWidget
-                    countryName={widget.settings.countryName}
-                    onCountryChange={(countryName) =>
-                        onUpdateSettings(widget.id, { countryName })
+                    countryCode={widget.settings.countryCode}
+                    onCountryChange={(countryCode) =>
+                        onUpdateSettings(widget.id, { countryCode })
                     }
                 />
             );
@@ -93,6 +96,8 @@ const Dashboard = ({}: DashboardProps) => {
     const [hydrated, setHydrated] = useState(false);
 
     const widgets = useDashboardStore((state) => state.widgets);
+    // Shared light catalog only when widgets exist
+    useCountriesCatalogQuery({ enabled: widgets.length > 0 });
     const layout = useDashboardStore((state) => state.layout);
     const addWidget = useDashboardStore((state) => state.addWidget);
     const removeWidget = useDashboardStore((state) => state.removeWidget);
